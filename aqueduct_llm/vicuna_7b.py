@@ -9,7 +9,7 @@ from fastchat.serve.inference import load_model, compute_skip_echo_len
 
 @torch.inference_mode()
 def generate(messages):
-    model_path = "/home/ubuntu/vicuna/vicuna-7b/"
+    model_path = "/vicuna-7b"
     device = "cuda"
     num_gpus = "1"
     max_gpu_memory = "13GiB"
