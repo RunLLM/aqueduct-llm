@@ -34,6 +34,7 @@ class Config:
 @torch.inference_mode()
 def generate(messages):
     config = Config()
+    config.describe()
 
     if isinstance(messages, str):
         messages = [messages]
