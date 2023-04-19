@@ -47,12 +47,11 @@ def generate(messages):
     if isinstance(messages, str):
         messages = [messages]
 
-    results = []
-    
-    for message in messages:
-        model, tokenizer = load_model(config.model_path, config.device,
-            config.num_gpus, config.max_gpu_memory, config.load_8bit, debug=config.debug)
+    model, tokenizer = load_model(config.model_path, config.device,
+        config.num_gpus, config.max_gpu_memory, config.load_8bit, debug=config.debug)
 
+    results = []
+    for message in messages:
         msg = message
 
         conv = get_default_conv_template(config.model_path).copy()
