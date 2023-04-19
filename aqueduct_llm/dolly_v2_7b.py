@@ -6,10 +6,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class Config:
     def __init__(self):
-        self.model_path = "/dolly-v2-3b"
+        self.model_path = "/dolly-v2-7b"
     
     def describe(self) -> str:
-        print("Running Dolly V2 3B with the following config:")
+        print("Running Dolly V2 7B with the following config:")
         attrs = {
             "model_path": self.model_path,
         }
