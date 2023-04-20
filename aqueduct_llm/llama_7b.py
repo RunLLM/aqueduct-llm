@@ -6,7 +6,7 @@ from transformers import LlamaForCausalLM, LlamaTokenizer
 
 class Config:
     def __init__(self):
-        self.model_path = "/llama-7b"
+        self.model_path = "decapoda-research/llama-7b-hf"
         self.device = "cuda"
     
     def describe(self) -> str:
