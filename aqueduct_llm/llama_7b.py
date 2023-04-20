@@ -56,4 +56,4 @@ def generate(messages):
 
         results.append(tokenizer.decode(generated[0]))
 
-    return results
+    return results[0] if len(results) == 1 else results

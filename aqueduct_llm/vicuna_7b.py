@@ -71,4 +71,4 @@ def generate(messages):
 
         results.append(outputs)
 
-    return results
+    return results[0] if len(results) == 1 else results

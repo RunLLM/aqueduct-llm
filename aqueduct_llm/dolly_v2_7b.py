@@ -40,4 +40,4 @@ def generate(messages):
         res = generate_text(message)
         results.append(res[0]["generated_text"])
 
-    return results
+    return results[0] if len(results) == 1 else results
