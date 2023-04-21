@@ -1,5 +1,6 @@
-import torch
+import time
 
+import torch
 from fastchat.conversation import get_default_conv_template
 from fastchat.serve.inference import load_model, compute_skip_echo_len
 
@@ -29,6 +30,7 @@ class Config:
 
 def download_llama_7b(llama_model_path):
     from huggingface_hub import snapshot_download
+    print("Downloading LLaMA 7B...")
     snapshot_download(
         repo_id=llama_model_path,
         local_dir="/llama-7b",
@@ -71,8 +73,17 @@ def generate(messages):
     if isinstance(messages, str):
         messages = [messages]
 
+    print("Loading model...")
+    start_time = time.time()
+
     model, tokenizer = load_model(config.model_path, config.device,
         config.num_gpus, config.max_gpu_memory, config.load_8bit, debug=config.debug)
+
+    print("Finished loading model.")
+    end_time = time.time()
+    time_taken = end_time - start_time
+
+    print(f'Time taken: {time_taken:.5f} seconds')
 
     results = []
     for message in messages:
