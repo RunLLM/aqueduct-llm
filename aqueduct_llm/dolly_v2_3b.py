@@ -1,4 +1,4 @@
-import os
+import time
 
 import torch
 from aqueduct_llm.utils.dolly_instruct_pipeline import InstructionTextGenerationPipeline
@@ -6,7 +6,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class Config:
     def __init__(self):
-        self.model_path = "/dolly-v2-3b"
+        self.model_path = "databricks/dolly-v2-3b"
     
     def describe(self) -> str:
         print("Running Dolly V2 3B with the following config:")
@@ -30,8 +30,17 @@ def generate(messages):
     if isinstance(messages, str):
         messages = [messages]
 
+    print("Downloading and loading model...")
+    start_time = time.time()
+
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, padding_side="left")
     model = AutoModelForCausalLM.from_pretrained(config.model_path, device_map="auto", torch_dtype=torch.bfloat16)
+    
+    print("Finished loading model.")
+    end_time = time.time()
+    time_taken = end_time - start_time
+
+    print(f'Time taken: {time_taken:.5f} seconds')
 
     generate_text = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
 

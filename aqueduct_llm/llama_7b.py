@@ -1,4 +1,3 @@
-import os
 import time
 
 import torch
@@ -37,6 +36,7 @@ def generate(messages):
 
     tokenizer = LlamaTokenizer.from_pretrained(config.model_path)
     model = LlamaForCausalLM.from_pretrained(config.model_path, torch_dtype=torch.bfloat16).to(config.device)
+    
     print("Finished loading model.")
     end_time = time.time()
     time_taken = end_time - start_time
