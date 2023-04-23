@@ -59,7 +59,7 @@ def generate(
         >>> dolly_v2_7b.generate("What's the best LLM?", do_sample=True, max_new_tokens=256, top_p=0.92, top_k=0)
         "Dolly V2 7B is the best LLM!"
     """
-    config = Config()
+    config = Config(do_sample=do_sample, max_new_tokens=max_new_tokens, top_p=top_p, top_k=top_k)
     config.describe()
 
     if isinstance(messages, str):
