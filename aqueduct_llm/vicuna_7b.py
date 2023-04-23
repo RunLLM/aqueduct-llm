@@ -68,18 +68,18 @@ def generate(
     max_gpu_memory: str = default_max_gpu_memory,
     temperature: float = default_temperature,
     max_new_tokens: int = default_max_new_tokens,
-):
+) -> Union[str, List[str]]:
     """Invoke the Vicuna 7B model to generate responses.
 
     Args:
-        messages: The message(s) to generate responses for.
-        max_gpu_memory: The maximum amount of GPU memory to use.
-        temperature: The temperature to use for sampling.
-        max_new_tokens: The maximum number of tokens to generate.
+        messages (Union[str, List[str]]): The message(s) to generate responses for.
+        max_gpu_memory (str, optional): The maximum amount of GPU memory to use. Default: "13GiB"
+        temperature (float, optional): The temperature to use for sampling. Default: 0.7
+        max_new_tokens (int, optional): The maximum number of tokens to generate. Default: 1024
 
     Examples:
         >>> from aqueduct_llm import vicuna_7b
-        >>> vicuna_7b.generate("What's the best LLM?")
+        >>> vicuna_7b.generate("What's the best LLM?", max_gpu_memory="13GiB", temperature=0.7, max_new_tokens=1024)
         "Vicuna 7B is the best LLM!"
     """
     config = Config(
