@@ -5,9 +5,10 @@ import torch
 from fastchat.conversation import get_default_conv_template
 from fastchat.serve.inference import load_model, compute_skip_echo_len
 
-default_max_gpu_memory = '13GiB'
+default_max_gpu_memory = "13GiB"
 default_temperature = 0.7
 default_max_new_tokens = 1024
+
 
 class Config:
     def __init__(
@@ -26,7 +27,7 @@ class Config:
         self.max_gpu_memory = default_max_gpu_memory
         self.temperature = temperature
         self.max_new_tokens = max_new_tokens
-    
+
     def describe(self) -> str:
         print("Running Vicuna 7B with the following config:")
         attrs = {
@@ -36,8 +37,10 @@ class Config:
         }
         print("\n".join([f"{attr}: {value}" for attr, value in attrs.items()]))
 
+
 def download_llama_7b(llama_model_path: str):
     from huggingface_hub import snapshot_download
+
     print("Downloading LLaMA 7B...")
     snapshot_download(
         repo_id=llama_model_path,
@@ -45,8 +48,10 @@ def download_llama_7b(llama_model_path: str):
         local_dir_use_symlinks=False,
     )
 
+
 def convert_weight():
     import subprocess
+
     cmd = [
         "python3",
         "-m",
@@ -61,6 +66,7 @@ def convert_weight():
 
     print("Converting LLaMA weights to Vicuna weights...")
     print(subprocess.check_output(cmd))
+
 
 @torch.inference_mode()
 def generate(
@@ -106,14 +112,20 @@ def generate(
     print("Loading model...")
     start_time = time.time()
 
-    model, tokenizer = load_model(config.model_path, config.device,
-        config.num_gpus, config.max_gpu_memory, config.load_8bit, debug=config.debug)
+    model, tokenizer = load_model(
+        config.model_path,
+        config.device,
+        config.num_gpus,
+        config.max_gpu_memory,
+        config.load_8bit,
+        debug=config.debug,
+    )
 
     print("Finished loading model.")
     end_time = time.time()
     time_taken = end_time - start_time
 
-    print(f'Time taken: {time_taken:.5f} seconds')
+    print(f"Time taken: {time_taken:.5f} seconds")
 
     results = []
     for message in messages:
@@ -129,7 +141,8 @@ def generate(
             torch.as_tensor(inputs.input_ids).cuda(),
             do_sample=True,
             temperature=config.temperature,
-            max_new_tokens=config.max_new_tokens)
+            max_new_tokens=config.max_new_tokens,
+        )
         outputs = tokenizer.batch_decode(output_ids, skip_special_tokens=True)[0]
         skip_echo_len = compute_skip_echo_len(config.model_path, conv, prompt)
         outputs = outputs[skip_echo_len:]

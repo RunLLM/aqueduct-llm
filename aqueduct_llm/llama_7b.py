@@ -6,18 +6,20 @@ from transformers import LlamaForCausalLM, LlamaTokenizer
 
 default_max_length = 100
 
+
 class Config:
     def __init__(self, max_length: int):
         self.model_path = "aleksickx/llama-7b-hf"
         self.device = "cuda"
         self.max_length = max_length
-    
+
     def describe(self) -> str:
         print("Running LLaMA 7B with the following config:")
         attrs = {
             "max_length": self.max_length,
         }
         print("\n".join([f"{attr}: {value}" for attr, value in attrs.items()]))
+
 
 def generate(
     messages: Union[str, List[str]],
@@ -52,21 +54,19 @@ def generate(
     start_time = time.time()
 
     tokenizer = LlamaTokenizer.from_pretrained(config.model_path)
-    model = LlamaForCausalLM.from_pretrained(config.model_path, torch_dtype=torch.bfloat16).to(config.device)
-    
+    model = LlamaForCausalLM.from_pretrained(config.model_path, torch_dtype=torch.bfloat16).to(
+        config.device
+    )
+
     print("Finished loading model.")
     end_time = time.time()
     time_taken = end_time - start_time
 
-    print(f'Time taken: {time_taken:.5f} seconds')
+    print(f"Time taken: {time_taken:.5f} seconds")
 
     results = []
     for message in messages:
-        batch = tokenizer(
-            message,
-            return_tensors="pt", 
-            add_special_tokens=False
-        )
+        batch = tokenizer(message, return_tensors="pt", add_special_tokens=False)
 
         batch = {k: v.to(config.device) for k, v in batch.items()}
         generated = model.generate(batch["input_ids"], max_length=config.max_length)

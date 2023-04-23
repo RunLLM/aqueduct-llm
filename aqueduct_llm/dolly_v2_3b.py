@@ -1,4 +1,5 @@
 import time
+from typing import List, Union
 
 import torch
 from aqueduct_llm.utils.dolly_instruct_pipeline import InstructionTextGenerationPipeline
@@ -8,6 +9,7 @@ default_do_sample = True
 default_max_new_tokens = 256
 default_top_p = 0.92
 default_top_k = 0
+
 
 class Config:
     def __init__(
@@ -22,7 +24,7 @@ class Config:
         self.max_new_tokens = max_new_tokens
         self.top_p = top_p
         self.top_k = top_k
-    
+
     def describe(self) -> str:
         print("Running Dolly V2 3B with the following config:")
         attrs = {
@@ -32,6 +34,7 @@ class Config:
             "top_k": self.top_k,
         }
         print("\n".join([f"{attr}: {value}" for attr, value in attrs.items()]))
+
 
 def generate(
     messages: Union[str, List[str]],
@@ -74,13 +77,15 @@ def generate(
     start_time = time.time()
 
     tokenizer = AutoTokenizer.from_pretrained(config.model_path, padding_side="left")
-    model = AutoModelForCausalLM.from_pretrained(config.model_path, device_map="auto", torch_dtype=torch.bfloat16)
-    
+    model = AutoModelForCausalLM.from_pretrained(
+        config.model_path, device_map="auto", torch_dtype=torch.bfloat16
+    )
+
     print("Finished loading model.")
     end_time = time.time()
     time_taken = end_time - start_time
 
-    print(f'Time taken: {time_taken:.5f} seconds')
+    print(f"Time taken: {time_taken:.5f} seconds")
 
     generate_text = InstructionTextGenerationPipeline(
         model=model,
